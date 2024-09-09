@@ -1,0 +1,7 @@
+.navbarCss {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 600;
+  flex-grow: 1;
+  padding: 20px;
+}
