@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { initialStateType, contextType, formDataType } from "../Type/Type";
+import { initialStateType, contextType } from "../Type/Type";
 import { dataFromAPI } from "../API/Data";
 const MyContext = createContext<contextType | null>(null);
 
@@ -66,9 +66,9 @@ const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       editId: editID,
       formData: {
         ...state.formData,
-        name: arr.name,
-        email: arr.email,
-        role: arr.role,
+        name: arr?.name ? arr.name : "",
+        email: arr?.email ? arr.email : "",
+        role: arr?.role ? arr.role : "",
       },
     });
   };

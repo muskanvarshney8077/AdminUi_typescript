@@ -39,8 +39,8 @@ const Home = () => {
                     <input
                       type="text"
                       value={state.formData.name}
-                      onChange={() => {
-                        handleEditChange();
+                      onChange={(e) => {
+                        handleEditChange(e);
                       }}
                       className="inputCss"
                     />
@@ -49,8 +49,8 @@ const Home = () => {
                     <input
                       type="text"
                       value={state.formData.email}
-                      onChange={() => {
-                        handleEditChange();
+                      onChange={(e) => {
+                        handleEditChange(e);
                       }}
                       className="inputCss"
                     />
@@ -59,8 +59,8 @@ const Home = () => {
                     <input
                       type="text"
                       value={state.formData.role}
-                      onChange={() => {
-                        handleEditChange();
+                      onChange={(e) => {
+                        handleEditChange(e);
                       }}
                       className="inputCss"
                     />

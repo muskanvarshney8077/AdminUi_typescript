@@ -22,7 +22,9 @@ export type contextType = {
   state: initialStateType;
   handleState: (obj: Partial<initialStateType>) => void;
   handleDeleteSingle: (id: number) => void;
-  handleEditChange: () => void;
+  handleEditChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   handleEditSaveButton: () => void;
   handleEditClickButton: (editID: number) => void;
   handleEditCancelButton: () => void;
