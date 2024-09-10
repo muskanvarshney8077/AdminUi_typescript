@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { initialStateType, contextType } from "../Type/Type";
+import { initialStateType, contextType, formDataType } from "../Type/Type";
 import { dataFromAPI } from "../API/Data";
 const MyContext = createContext<contextType | null>(null);
 
@@ -61,7 +61,16 @@ const DataProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   const handleEditSaveButton = () => {};
   const handleEditClickButton = (editID: number) => {
-    handleState({ editId: editID });
+    const arr = state.filterData.find((ele) => ele.id === editID);
+    handleState({
+      editId: editID,
+      formData: {
+        ...state.formData,
+        name: arr.name,
+        email: arr.email,
+        role: arr.role,
+      },
+    });
   };
   const handleEditCancelButton = () => {};
   const contextValue = {
