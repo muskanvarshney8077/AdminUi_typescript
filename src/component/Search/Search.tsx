@@ -1,19 +1,19 @@
 import "./Search.css";
 import { useMyContext } from "../../context/MyContext";
 const Search = () => {
-  const { handleState } = useMyContext();
+  const { state, handleState } = useMyContext();
   return (
     <div className="searchCss">
-      <form className="example">
-        <input
-          type="text"
-          placeholder="Search.."
-          name="search"
-          onChange={(e) => {
-            handleState({ searchText: e.target.value });
-          }}
-        />
-      </form>
+      <input
+        className="example"
+        type="text"
+        placeholder="Search by Name,Email,Role"
+        name="search"
+        value={state.searchText}
+        onChange={(e) => {
+          handleState({ searchText: e.target.value });
+        }}
+      />
     </div>
   );
 };

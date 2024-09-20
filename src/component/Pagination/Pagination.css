@@ -1,0 +1,51 @@
+.paginationHeader {
+  display: flex;
+  justify-content: space-around;
+
+  align-items: center;
+  gap: 10px;
+}
+.paginationButton {
+  border: 1px solid grey;
+  border-radius: 100%;
+  padding: 10px 15px;
+  background-color: aquamarine;
+
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  border-color: grey;
+  cursor: pointer;
+}
+.headingBetween {
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10vw;
+
+  margin: 0px;
+  padding: 0px;
+}
+.paginationButtonText {
+  background-color: aquamarine;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  border-color: grey;
+  cursor: pointer;
+}
+.paginationInput {
+  width: 8%;
+  padding: 10px 12px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  outline: none;
+  margin-right: 4%;
+  border: none;
+  border-bottom: 1px solid black;
+}

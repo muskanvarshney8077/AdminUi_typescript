@@ -1,8 +1,13 @@
 .deleteSelectedCss {
   border: 1px solid grey;
-  border-radius: 10%;
-  background-color: red;
-  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  padding: 10px 20px;
   margin-left: 10%;
+  width: 100%;
   font-size: large;
+  border: 1px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+
+  cursor: pointer;
 }

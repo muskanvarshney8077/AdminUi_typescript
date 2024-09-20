@@ -4,24 +4,47 @@ import EditIcon from "../../assets/Edit.svg";
 import DeleteIcon from "../../assets/Delete.svg";
 import Tick from "../../assets/Tick.svg";
 import Cancel from "../../assets/Cancel.svg";
+import { useState } from "react";
 
 const Home = () => {
-  const {
-    state,
-    handleDeleteSingle,
-    handleEditChange,
-    handleEditSaveButton,
-    handleEditClickButton,
-    handleEditCancelButton,
-  } = useMyContext();
+  const { state, handleState, handleEditClickButton } = useMyContext();
+
+  const handleCheckBoxAll = () => {
+    if (!state?.deleteIdArray.length) {
+      handleState({
+        deleteIdArray: [...state.filterData.map((ele) => ele.id)],
+      });
+    } else {
+      handleState({ deleteIdArray: [] });
+    }
+  };
+
+  const handleCheckSingle = (id: string) => {
+    if (state?.deleteIdArray.find((ele) => ele.toString() === id)) {
+      handleState({
+        deleteIdArray: [
+          ...state.deleteIdArray.filter((ele) => ele.toString() != id),
+        ],
+      });
+    } else {
+      handleState({ deleteIdArray: [...state.deleteIdArray, id] });
+    }
+  };
 
   return (
-    <div>
+    <div className="tableContainer">
       <table className="mainTable">
-        <thead>
+        <thead className="headerTableCss">
           <tr className="trCss">
             <th className="tdCss header">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={
+                  state?.filterData.length != 0 &&
+                  state?.deleteIdArray.length === state?.filterData.length
+                }
+                onChange={handleCheckBoxAll}
+              />
             </th>
             <th className="tdCss header">Name</th>
             <th className="tdCss header">Email</th>
@@ -30,57 +53,123 @@ const Home = () => {
           </tr>
         </thead>
         <tbody>
-          {state.filterData.map((ele) => (
-            <tr key={ele.id} className="rowCss">
-              {state.editId === ele.id ? (
+          {state?.filterData.map((ele, i) => (
+            <tr key={i} className="rowCss">
+              {state?.editId === ele.id ? (
                 <>
                   <td></td>
                   <td className="tdCss ">
                     <input
                       type="text"
-                      value={state.formData.name}
-                      onChange={(e) => {
-                        handleEditChange(e);
-                      }}
+                      value={state?.formData.name}
+                      onChange={(e) =>
+                        handleState({
+                          formData: {
+                            ...state?.formData,
+                            name: e.target.value,
+                          },
+                        })
+                      }
                       className="inputCss"
                     />
                   </td>
                   <td className="tdCss ">
                     <input
-                      type="text"
-                      value={state.formData.email}
-                      onChange={(e) => {
-                        handleEditChange(e);
-                      }}
+                      type="email"
+                      value={state?.formData.email}
+                      onChange={(e) =>
+                        handleState({
+                          ...state,
+                          formData: {
+                            ...state?.formData,
+                            email: e.target.value,
+                          },
+                        })
+                      }
                       className="inputCss"
                     />
                   </td>
                   <td className="tdCss ">
-                    <input
-                      type="text"
-                      value={state.formData.role}
-                      onChange={(e) => {
-                        handleEditChange(e);
-                      }}
-                      className="inputCss"
-                    />
+                    <select
+                      className="selectCss"
+                      value={state?.formData.role}
+                      onChange={(e) =>
+                        handleState({
+                          ...state,
+                          formData: {
+                            ...state?.formData,
+                            role: e.target.value,
+                          },
+                        })
+                      }
+                    >
+                      <option value="admin">admin</option>
+                      <option value="member">member</option>
+                    </select>
                   </td>
 
                   <td className="tdCss actionCss">
-                    <img src={Tick} alt="tick" onClick={handleEditSaveButton} />
+                    <img
+                      src={Tick}
+                      width="30"
+                      height="30"
+                      alt="tick"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        handleState({
+                          editId: "",
+                          filterData: [
+                            ...state.filterData.map((ele) =>
+                              ele.id === state.formData.id
+                                ? {
+                                    id: state?.formData.id,
+                                    name: state?.formData.name,
+                                    email: state?.formData.email,
+                                    role: state?.formData.role,
+                                  }
+                                : ele
+                            ),
+                          ],
+                          mainData: [
+                            ...state.mainData.map((ele) =>
+                              ele.id.toString() === state.formData.id
+                                ? {
+                                    id: state?.formData.id,
+                                    name: state?.formData.name,
+                                    email: state?.formData.email,
+                                    role: state?.formData.role,
+                                  }
+                                : ele
+                            ),
+                          ],
+                        });
+                      }}
+                    />
                     <img
                       src={Cancel}
                       alt="cancel"
+                      style={{ cursor: "pointer" }}
                       width={30}
                       height={30}
-                      onClick={handleEditCancelButton}
+                      onClick={() => {
+                        handleState({
+                          formData: { id: "", name: "", email: "", role: "" },
+                          editId: "",
+                        });
+                      }}
                     />
                   </td>
                 </>
               ) : (
                 <>
-                  <td className="tdCss">
-                    <input type="checkbox" />
+                  <td className="tdCssCheckbox">
+                    <input
+                      type="checkbox"
+                      checked={state?.deleteIdArray.includes(ele.id)}
+                      onChange={() => {
+                        handleCheckSingle(ele.id);
+                      }}
+                    />
                   </td>
                   <td className="tdCss">{ele.name}</td>
                   <td className="tdCss">{ele.email}</td>
@@ -93,14 +182,27 @@ const Home = () => {
                       onClick={() => {
                         handleEditClickButton(ele.id);
                       }}
+                      style={{ cursor: "pointer" }}
                     />
                     <img
                       src={DeleteIcon}
                       width="35"
                       height="35"
                       onClick={() => {
-                        handleDeleteSingle(ele.id);
+                        handleState({
+                          filterData: state?.filterData.filter(
+                            (element) => element.id !== ele.id
+                          ),
+                          mainData: state?.mainData.filter(
+                            (element) => element.id !== ele.id
+                          ),
+                          currentpage:
+                            state.filterData.length === 1
+                              ? state.currentpage - 1
+                              : state.currentpage,
+                        });
                       }}
+                      style={{ cursor: "pointer" }}
                     />
                   </td>
                 </>

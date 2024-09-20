@@ -1,19 +1,26 @@
 export type mainDataObject = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
 };
+
 export type initialStateType = {
   mainData: mainDataObject[];
   searchText: string;
   filterData: mainDataObject[];
-  deleteId: number;
-  checkedArray: number[];
-  editId: number;
+  editId: string;
   formData: formDataType;
+  deleteIdArray: string[];
+  currentpage: number;
+  records: mainDataObject[];
+  npage: number;
+  modalOpen: boolean;
+  isSearch: boolean;
+  isInsert: boolean;
 };
 export type formDataType = {
+  id: string;
   name: string;
   role: string;
   email: string;
@@ -21,11 +28,5 @@ export type formDataType = {
 export type contextType = {
   state: initialStateType;
   handleState: (obj: Partial<initialStateType>) => void;
-  handleDeleteSingle: (id: number) => void;
-  handleEditChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  handleEditSaveButton: () => void;
-  handleEditClickButton: (editID: number) => void;
-  handleEditCancelButton: () => void;
+  handleEditClickButton: (editID: string) => void;
 };

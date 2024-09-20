@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { initialStateType, contextType } from "../Type/Type";
+import { initialStateType, contextType, mainDataObject } from "../Type/Type";
 import { dataFromAPI } from "../API/Data";
 const MyContext = createContext<contextType | null>(null);
 
@@ -10,14 +10,20 @@ const DataProvider: React.FC<{ children: React.ReactNode }> = ({
     mainData: [],
     searchText: "",
     filterData: [],
-    deleteId: -1,
-    checkedArray: [],
-    editId: -1,
+    editId: "",
     formData: {
+      id: "",
       name: "",
       email: "",
       role: "",
     },
+    deleteIdArray: [],
+    currentpage: 1,
+    records: [],
+    npage: 1,
+    modalOpen: false,
+    isSearch: true,
+    isInsert: false,
   };
   const reducer = (
     state: initialStateType,
@@ -27,60 +33,75 @@ const DataProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleState = (obj: Partial<initialStateType>) => {
     dispatch(obj);
   };
-  // UseEffect
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  console.log(state.currentpage, state.filterData.length);
   useEffect(() => {
     dataFromAPI().then((res) =>
       handleState({ mainData: res, filterData: res })
     );
   }, []);
+  const paginationFunction = (demoArr: mainDataObject[]) => {
+    const itemPerPage = 10;
+    const lastIndex = state?.currentpage * itemPerPage;
+    const firstIndex = lastIndex - itemPerPage;
+    const records = demoArr.slice(firstIndex, lastIndex);
+
+    handleState({
+      npage: Math.ceil(demoArr.length / itemPerPage),
+      filterData: records,
+    });
+  };
   useEffect(() => {
-    if (state.searchText) {
-      searchFunction(state.searchText);
+    paginationFunction([...state.mainData]);
+  }, [state?.mainData, state?.currentpage, state?.isSearch, state?.isInsert]);
+  useEffect(() => {
+    if (state?.searchText) {
+      searchFunction(state?.searchText);
     } else {
-      handleState({ filterData: state.mainData });
+      handleState({ isSearch: true });
     }
-  }, [state.searchText]);
+  }, [state?.searchText]);
+  useEffect(() => {
+    handleState({
+      currentpage: 1,
+    });
+  }, [state?.isInsert]);
+
   const searchFunction = (searchName: string) => {
-    const arr = state.mainData.filter(
+    const arr = state?.mainData.filter(
       (ele) =>
         ele.name.toLowerCase().includes(searchName.toLowerCase()) ||
         ele.role.includes(searchName) ||
         ele.email.toLowerCase().includes(searchName.toLowerCase())
     );
-    handleState({ filterData: arr });
+    paginationFunction(arr);
+    handleState({
+      // filterData: arr,
+      isSearch: false,
+      currentpage: 1,
+      npage: Math.ceil(state?.filterData.length / 10),
+    });
   };
-  const handleDeleteSingle = (id: number) => {
-    console.log(id);
-    const arr = state.filterData.filter((ele) => ele.id !== id);
-    handleState({ filterData: arr });
-  };
-  const handleEditChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    console.log(e.target.value);
-  };
-  const handleEditSaveButton = () => {};
-  const handleEditClickButton = (editID: number) => {
-    const arr = state.filterData.find((ele) => ele.id === editID);
+
+  const handleEditClickButton = (editID: string) => {
+    const obj = state?.filterData.find((ele) => ele.id === editID);
     handleState({
       editId: editID,
       formData: {
-        ...state.formData,
-        name: arr?.name ? arr.name : "",
-        email: arr?.email ? arr.email : "",
-        role: arr?.role ? arr.role : "",
+        ...state?.formData,
+        id: editID.toString(),
+        name: obj?.name ? obj.name : "",
+        email: obj?.email ? obj.email : "",
+        role: obj?.role ? obj.role : "",
       },
     });
   };
-  const handleEditCancelButton = () => {};
+
   const contextValue = {
     state,
     handleState,
-    handleDeleteSingle,
-    handleEditChange,
-    handleEditSaveButton,
     handleEditClickButton,
-    handleEditCancelButton,
   };
   return (
     <div>
@@ -97,5 +118,5 @@ const useMyContext = () => {
   }
   return context;
 };
-// export const MyContext = createContext("");
+
 export { DataProvider, useMyContext };
