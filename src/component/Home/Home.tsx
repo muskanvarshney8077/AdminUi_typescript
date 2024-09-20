@@ -4,7 +4,6 @@ import EditIcon from "../../assets/Edit.svg";
 import DeleteIcon from "../../assets/Delete.svg";
 import Tick from "../../assets/Tick.svg";
 import Cancel from "../../assets/Cancel.svg";
-import { useState } from "react";
 
 const Home = () => {
   const { state, handleState, handleEditClickButton } = useMyContext();
